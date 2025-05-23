@@ -3,4 +3,4 @@ common:
         board:
             - source/board/numaker_pfm_m487km.c
         family:
-            - source/family/nuvoton/m487jidae/target.c
+            - source/family/st/stm32f103rb/target.c

@@ -399,7 +399,7 @@
 #endif
 #define USBD_BULK_ENABLE             BULK_ENDPOINT
 #define USBD_BULK_EP_BULKIN          1 // fixme: both bulk and hid ep cannot be both enabled in a single build
-#define USBD_BULK_EP_BULKOUT         1
+#define USBD_BULK_EP_BULKOUT         2
 #define USBD_BULK_EP_BULKIN_SWO      6
 #define USBD_BULK_WMAXPACKETSIZE     64
 #define USBD_BULK_HS_ENABLE          0
