@@ -169,6 +169,22 @@ __WEAK void handle_reset_button(void)
     }
 }
 
+void handle_user_button(void)
+{
+    extern uint8_t gpio_get_user_btn(void);
+    extern void swd_set_target_reset_sysresetreq(void);
+    static uint8_t user_btn_st = 0;
+
+    if(!user_btn_st && gpio_get_user_btn()){
+
+        user_btn_st = 1;
+    } else if(user_btn_st && !gpio_get_user_btn()){
+        swd_set_target_reset_sysresetreq();
+
+        user_btn_st = 0;
+    }
+}
+
 __WEAK void board_handle_powerdown()
 {
     // TODO: put the interface chip in sleep mode
@@ -450,6 +466,7 @@ void main_task(void * arg)
         if (flags & FLAGS_MAIN_30MS) {
 
             handle_reset_button();
+            handle_user_button();
 
 #ifdef PBON_BUTTON
             // handle PBON pressed

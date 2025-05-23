@@ -63,4 +63,10 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_M48SSIDAE);
 #define OFF_BTN_GRP PC
 #define OFF_BTN_BIT 7
 
+//DaplinkHS-EEmaker
+#define USER_BTN_IO     PB7
+#define USER_BTN_GRP    PB
+#define USER_BTN_BIT    7
+
+
 #endif

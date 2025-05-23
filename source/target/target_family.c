@@ -154,12 +154,27 @@ uint8_t target_set_state(target_state_t state)
     }
 }
 
+void swd_set_target_reset_sysresetreq(void)
+{
+    if(swd_init_debug()){
+        //common for armv6m/armv7m/armv8m
+        uint32_t aircr_addr = (uint32_t)&SCB->AIRCR;
+        uint32_t aircr_val = (0x05FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk;
+        swd_write_word(aircr_addr, aircr_val);
+        swd_off();
+    }
+}
+
 void swd_set_target_reset(uint8_t asserted)
 {
     if (g_target_family && g_target_family->swd_set_target_reset) {
         g_target_family->swd_set_target_reset(asserted);
     } else {
         (asserted) ? PIN_nRESET_OUT(0) : PIN_nRESET_OUT(1);
+
+        // if(asserted == 0){
+        //     swd_set_target_reset_sysresetreq();
+        // }
     }
 }
 
