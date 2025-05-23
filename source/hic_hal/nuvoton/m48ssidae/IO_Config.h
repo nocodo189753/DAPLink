@@ -28,45 +28,49 @@
 
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_M48SSIDAE);
 
-// SWD
-#define SWD_DAT_IO  PA9
-#define SWD_DAT_GRP PA
-#define SWD_DAT_BIT 9
+///// Daplink-HS EEmaker
+// SWD+JTAG
+#define EEPIN_SWCLK_TCK_IO      PA10
+#define EEPIN_SWCLK_TCK_GRP     PA
+#define EEPIN_SWCLK_TCK_BIT     10
 
-#define SWD_CLK_IO  PA10
-#define SWD_CLK_GRP PA
-#define SWD_CLK_BIT 10
+#define EEPIN_SWDIO_TMS_IO      PA9
+#define EEPIN_SWDIO_TMS_GRP     PA
+#define EEPIN_SWDIO_TMS_BIT     9
 
-#define DBG_RST_IO  PF5
-#define DBG_RST_GRP PF
-#define DBG_RST_BIT 5
+#define EEPIN_NRST_IO           PF5
+#define EEPIN_NRST_GRP          PF
+#define EEPIN_NRST_BIT          5
+
+#define EEPIN_TDI_IO            PA7
+#define EEPIN_TDI_GRP           PA
+#define EEPIN_TDI_BIT           7
+
+#define EEPIN_TDO_IO            PA6
+#define EEPIN_TDO_GRP           PA
+#define EEPIN_TDO_BIT           6
 
 // LED
-#define LED_ICE_IO  PF4
-#define LED_ICE_GRP PF
-#define LED_ICE_BIT 4
+#define EEPIN_LED_R_IO          PC6
+#define EEPIN_LED_R_GRP         PC
+#define EEPIN_LED_R_BIT         6
 
-#define LED_ISP_IO  PC6
-#define LED_ISP_GRP PC
-#define LED_ISP_BIT 6
+#define EEPIN_LED_G_IO          PF4
+#define EEPIN_LED_G_GRP         PF
+#define EEPIN_LED_G_BIT         4
 
-#define LED_RED_IO  PB9
-#define LED_RED_GRP PB
-#define LED_RED_BIT 9
+#define EEPIN_LED_B_IO          PB8
+#define EEPIN_LED_B_GRP         PB
+#define EEPIN_LED_B_BIT         8
 
-#define LED_GRE_IO  PB8
-#define LED_GRE_GRP PB
-#define LED_GRE_BIT 8
+// BUTTON
+#define EEPIN_BTN_RST_IO        PC7
+#define EEPIN_BTN_RST_GRP       PC
+#define EEPIN_BTN_RST_BIT       7
 
-// Other
-#define OFF_BTN_IO  PC7
-#define OFF_BTN_GRP PC
-#define OFF_BTN_BIT 7
-
-//DaplinkHS-EEmaker
-#define USER_BTN_IO     PB7
-#define USER_BTN_GRP    PB
-#define USER_BTN_BIT    7
+#define EEPIN_BTN_USER_IO       PB7
+#define EEPIN_BTN_USER_GRP      PB
+#define EEPIN_BTN_USER_BIT      7
 
 
 #endif

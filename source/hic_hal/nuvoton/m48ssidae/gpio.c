@@ -23,8 +23,8 @@
 
 void gpio_init(void)
 {
-    GPIO_SetMode(OFF_BTN_GRP, (1 << OFF_BTN_BIT), GPIO_MODE_INPUT);
-    GPIO_SetMode(USER_BTN_GRP, (1 << USER_BTN_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_BTN_RST_GRP, (1 << EEPIN_LED_B_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_BTN_USER_GRP, (1 << EEPIN_BTN_USER_BIT), GPIO_MODE_INPUT);
 }
 
 void gpio_set_hid_led(gpio_led_state_t state)
@@ -46,7 +46,7 @@ uint8_t gpio_get_reset_btn_no_fwrd(void)
 
 uint8_t gpio_get_reset_btn_fwrd(void)
 {
-    return (OFF_BTN_IO != 0) ? 0 : 1;
+    return (EEPIN_BTN_RST_IO != 0) ? 0 : 1;
 }
 
 void gpio_set_board_power(bool powerEnabled)
@@ -55,5 +55,5 @@ void gpio_set_board_power(bool powerEnabled)
 
 uint8_t gpio_get_user_btn(void)
 {
-    return (USER_BTN_IO != 0) ? 0 : 1;
+    return (EEPIN_BTN_USER_IO != 0) ? 0 : 1;
 }

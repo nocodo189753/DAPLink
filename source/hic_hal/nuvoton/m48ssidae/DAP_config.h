@@ -60,11 +60,11 @@ This information includes:
 
 /// Indicate that JTAG communication mode is available at the Debug Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
-#define DAP_JTAG                0               ///< JTAG Mode: 1 = available, 0 = not available.
+#define DAP_JTAG                1               ///< JTAG Mode: 1 = available, 0 = not available.
 
 /// Configure maximum number of JTAG devices on the scan chain connected to the Debug Access Port.
 /// This setting impacts the RAM requirements of the Debug Unit. Valid range is 1 .. 255.
-#define DAP_JTAG_DEV_CNT        0               ///< Maximum number of JTAG devices on scan chain
+#define DAP_JTAG_DEV_CNT        8               ///< Maximum number of JTAG devices on scan chain
 
 /// Default communication mode on the Debug Access Port.
 /// Used for the command \ref DAP_Connect when Port Default mode is selected.
@@ -188,23 +188,34 @@ Configures the DAP Hardware I/O pins for JTAG mode:
 */
 __STATIC_INLINE void PORT_JTAG_SETUP(void)
 {
-#if (DAP_JTAG != 0)
-#endif
+    EEPIN_SWCLK_TCK_IO = 1;
+    EEPIN_SWDIO_TMS_IO = 1;
+    EEPIN_TDI_IO = 1;
+    EEPIN_NRST_IO = 1;
+
+    GPIO_SetMode(EEPIN_SWCLK_TCK_GRP, (1 << EEPIN_SWCLK_TCK_BIT), GPIO_MODE_OUTPUT);
+    GPIO_SetMode(EEPIN_SWDIO_TMS_GRP, (1 << EEPIN_SWDIO_TMS_BIT), GPIO_MODE_OUTPUT);
+    GPIO_SetMode(EEPIN_TDI_GRP, (1 << EEPIN_TDI_BIT), GPIO_MODE_OUTPUT);
+    GPIO_SetMode(EEPIN_TDO_GRP, (1 << EEPIN_TDO_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_NRST_GRP, (1 << EEPIN_NRST_BIT), GPIO_MODE_OPEN_DRAIN);
 }
 
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
 Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
  - SWCLK, SWDIO, nRESET to output mode and set to default high level.
- - TDI, TMS, nTRST to HighZ mode (pins are unused in SWD mode).
+ - TDI, TDO, nTRST to HighZ mode (pins are unused in SWD mode).
 */
 __STATIC_INLINE void PORT_SWD_SETUP(void)
 {
-    SWD_DAT_IO = 1;
-    SWD_CLK_IO = 1;
-    DBG_RST_IO = 1;
-    GPIO_SetMode(SWD_DAT_GRP, (1 << SWD_DAT_BIT), GPIO_MODE_OUTPUT);
-    GPIO_SetMode(SWD_CLK_GRP, (1 << SWD_CLK_BIT), GPIO_MODE_OUTPUT);
-    GPIO_SetMode(DBG_RST_GRP, (1 << DBG_RST_BIT), GPIO_MODE_OUTPUT);
+    EEPIN_SWCLK_TCK_IO = 1;
+    EEPIN_SWDIO_TMS_IO = 1;
+    EEPIN_NRST_IO = 1;
+
+    GPIO_SetMode(EEPIN_SWCLK_TCK_GRP, (1 << EEPIN_SWCLK_TCK_BIT), GPIO_MODE_OUTPUT);
+    GPIO_SetMode(EEPIN_SWDIO_TMS_GRP, (1 << EEPIN_SWDIO_TMS_BIT), GPIO_MODE_OUTPUT);
+    GPIO_SetMode(EEPIN_NRST_GRP, (1 << EEPIN_NRST_BIT), GPIO_MODE_OPEN_DRAIN);
+    GPIO_SetMode(EEPIN_TDI_GRP, (1 << EEPIN_TDI_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_TDO_GRP, (1 << EEPIN_TDO_BIT), GPIO_MODE_INPUT);
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -213,9 +224,11 @@ Disables the DAP Hardware I/O pins which configures:
 */
 __STATIC_INLINE void PORT_OFF(void)
 {
-    GPIO_SetMode(SWD_DAT_GRP, (1 << SWD_DAT_BIT), GPIO_MODE_INPUT);
-    GPIO_SetMode(SWD_CLK_GRP, (1 << SWD_CLK_BIT), GPIO_MODE_INPUT);
-    GPIO_SetMode(DBG_RST_GRP, (1 << DBG_RST_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_SWCLK_TCK_GRP, (1 << EEPIN_SWCLK_TCK_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_SWDIO_TMS_GRP, (1 << EEPIN_SWDIO_TMS_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_NRST_GRP, (1 << EEPIN_NRST_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_TDI_GRP, (1 << EEPIN_TDI_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_TDO_GRP, (1 << EEPIN_TDO_BIT), GPIO_MODE_INPUT);
 }
 
 // SWCLK/TCK I/O pin -------------------------------------
@@ -225,7 +238,7 @@ __STATIC_INLINE void PORT_OFF(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWCLK_TCK_IN(void)
 {
-    return SWD_CLK_IO;
+    return EEPIN_SWCLK_TCK_IO;
 }
 
 /** SWCLK/TCK I/O pin: Set Output to High.
@@ -233,7 +246,7 @@ Set the SWCLK/TCK DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void PIN_SWCLK_TCK_SET(void)
 {
-    SWD_CLK_IO = 1;
+    EEPIN_SWCLK_TCK_IO = 1;
 }
 
 /** SWCLK/TCK I/O pin: Set Output to Low.
@@ -241,7 +254,7 @@ Set the SWCLK/TCK DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void PIN_SWCLK_TCK_CLR(void)
 {
-    SWD_CLK_IO = 0;
+    EEPIN_SWCLK_TCK_IO = 0;
 }
 
 // SWDIO/TMS Pin I/O --------------------------------------
@@ -251,7 +264,7 @@ __STATIC_FORCEINLINE void PIN_SWCLK_TCK_CLR(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_TMS_IN(void)
 {
-    return SWD_DAT_IO;
+    return EEPIN_SWDIO_TMS_IO;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to High.
@@ -259,7 +272,7 @@ Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void PIN_SWDIO_TMS_SET(void)
 {
-    SWD_DAT_IO = 1;
+    EEPIN_SWDIO_TMS_IO = 1;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to Low.
@@ -267,7 +280,7 @@ Set the SWDIO/TMS DAP hardware I/O pin to low level.
 */
 __STATIC_FORCEINLINE void PIN_SWDIO_TMS_CLR(void)
 {
-    SWD_DAT_IO = 0;
+    EEPIN_SWDIO_TMS_IO = 0;
 }
 
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
@@ -275,7 +288,7 @@ __STATIC_FORCEINLINE void PIN_SWDIO_TMS_CLR(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN(void)
 {
-    return SWD_DAT_IO;
+    return EEPIN_SWDIO_TMS_IO;
 }
 
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
@@ -283,7 +296,7 @@ __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN(void)
 */
 __STATIC_FORCEINLINE void PIN_SWDIO_OUT(uint32_t bit)
 {
-    SWD_DAT_IO = bit;
+    EEPIN_SWDIO_TMS_IO = bit;
 }
 
 /** SWDIO I/O pin: Switch to Output mode (used in SWD mode only).
@@ -292,7 +305,7 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void PIN_SWDIO_OUT_ENABLE(void)
 {
-    GPIO_SetMode(SWD_DAT_GRP, (1 << SWD_DAT_BIT), GPIO_MODE_OUTPUT);
+    GPIO_SetMode(EEPIN_SWDIO_TMS_GRP, (1 << EEPIN_SWDIO_TMS_BIT), GPIO_MODE_OUTPUT);
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -301,7 +314,7 @@ called prior \ref PIN_SWDIO_IN function calls.
 */
 __STATIC_FORCEINLINE void PIN_SWDIO_OUT_DISABLE(void)
 {
-    GPIO_SetMode(SWD_DAT_GRP, (1 << SWD_DAT_BIT), GPIO_MODE_INPUT);
+    GPIO_SetMode(EEPIN_SWDIO_TMS_GRP, (1 << EEPIN_SWDIO_TMS_BIT), GPIO_MODE_INPUT);
 }
 
 
@@ -312,7 +325,7 @@ __STATIC_FORCEINLINE void PIN_SWDIO_OUT_DISABLE(void)
 */
 __STATIC_FORCEINLINE uint32_t PIN_TDI_IN(void)
 {
-    return (0);   // Not available
+    return EEPIN_TDI_IO;
 }
 
 /** TDI I/O pin: Set Output.
@@ -320,7 +333,7 @@ __STATIC_FORCEINLINE uint32_t PIN_TDI_IN(void)
 */
 __STATIC_FORCEINLINE void PIN_TDI_OUT(uint32_t bit)
 {
-    ;             // Not available
+    EEPIN_TDI_IO = bit;
 }
 
 
@@ -331,7 +344,7 @@ __STATIC_FORCEINLINE void PIN_TDI_OUT(uint32_t bit)
 */
 __STATIC_FORCEINLINE uint32_t PIN_TDO_IN(void)
 {
-    return (0);   // Not available
+    return EEPIN_TDO_IO;
 }
 
 
@@ -362,7 +375,7 @@ __STATIC_FORCEINLINE void PIN_nTRST_OUT(uint32_t bit)
 */
 __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 {
-    return DBG_RST_IO;
+    return EEPIN_NRST_IO;
 }
 
 /** nRESET I/O pin: Set Output.
@@ -374,7 +387,7 @@ __STATIC_FORCEINLINE uint32_t PIN_nRESET_IN(void)
 
 __STATIC_FORCEINLINE void     PIN_nRESET_OUT(uint32_t bit)
 {
-    DBG_RST_IO = bit;
+    EEPIN_NRST_IO = bit;
 }
 
 //**************************************************************************************************
@@ -397,7 +410,7 @@ It is recommended to provide the following LEDs for status indication:
 */
 __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 {
-    LED_ISP_IO = bit ? 0 : 1;
+    EEPIN_LED_R_IO = bit ? 0 : 1;
 }
 
 /** Debug Unit: Set status Target Running LED.
@@ -407,7 +420,7 @@ __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 */
 __STATIC_INLINE void LED_RUNNING_OUT(uint32_t bit)
 {
-    LED_GRE_IO = bit ? 0 : 1;
+    EEPIN_LED_B_IO = bit ? 0 : 1;
 }
 
 ///@}
@@ -454,12 +467,12 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
 */
 __STATIC_INLINE void DAP_SETUP(void)
 {
-    GPIO_SetMode(LED_ICE_GRP, (1 << LED_ICE_BIT), GPIO_MODE_OUTPUT);
-    GPIO_SetMode(LED_ISP_GRP, (1 << LED_ISP_BIT), GPIO_MODE_OUTPUT);
-    GPIO_SetMode(LED_GRE_GRP, (1 << LED_GRE_BIT), GPIO_MODE_OUTPUT);
-    LED_ICE_IO = 0;
-    LED_ISP_IO = 1;
-    LED_GRE_IO = 1;
+    GPIO_SetMode(EEPIN_LED_R_GRP, (1 << EEPIN_LED_R_BIT), GPIO_MODE_OUTPUT);
+    GPIO_SetMode(EEPIN_LED_G_GRP, (1 << EEPIN_LED_G_BIT), GPIO_MODE_OUTPUT);
+    GPIO_SetMode(EEPIN_LED_B_GRP, (1 << EEPIN_LED_B_BIT), GPIO_MODE_OUTPUT);
+    EEPIN_LED_R_IO = 1;
+    EEPIN_LED_G_IO = 0;
+    EEPIN_LED_B_IO = 1;
 }
 
 /** Reset Target Device with custom specific I/O pin or command sequence.
