@@ -1,4 +1,18 @@
 
+# 简介
+1. 本项目为针对 DAPLINK-HS (EEmaker) 硬件的个人修改
+2. HID 改 BULK（CMSIS DAP v1 -> v2）
+3. 添加JTAG操作支持
+4. LED灯变动
+5. USER按键改为SW reset。DAPLINK默认reset动作都是操作硬件nRESET脚（包括U盘烧写后的自动复位功能），这个默认特性没有变，有需要的可以自己在 swd_set_target_reset() 里取消注释
+6. U盘烧写的 target改为 stm32f103rc
+
+# 其他
+1. BULK模式下，DAP_PACKET_COUNT 只能设成1，否则pyocd 烧写会连发多个命令，每个命令都需要回复512字节，此时BULK IN的buffer大小不够会导致USB异常，可以尝试阉割MSC/CDC等功能
+2. BULK和HID的速度差异数据未测试
+---
+
+
 [![DAPLink](/docs/images/daplink-website-logo-link.png)](https://daplink.io/)
 
 [![Linux Build (main)](https://github.com/ARMmbed/DAPLink/actions/workflows/linux.yml/badge.svg?branch=main)](https://github.com/ARMmbed/DAPLink/actions/workflows/linux.yml)
