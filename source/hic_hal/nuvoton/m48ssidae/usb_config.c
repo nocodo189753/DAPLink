@@ -402,7 +402,7 @@
 #define USBD_BULK_EP_BULKOUT         2
 #define USBD_BULK_EP_BULKIN_SWO      6
 #define USBD_BULK_WMAXPACKETSIZE     64
-#define USBD_BULK_HS_ENABLE          0
+#define USBD_BULK_HS_ENABLE          1
 #define USBD_BULK_HS_WMAXPACKETSIZE  512
 #define USBD_BULK_STRDESC            L"CMSIS-DAP v2"
 

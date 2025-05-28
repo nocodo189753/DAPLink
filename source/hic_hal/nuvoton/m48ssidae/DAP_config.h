@@ -90,7 +90,7 @@ This information includes:
 /// debugger and depends on the USB peripheral. For devices with limited RAM or USB buffer the
 /// setting can be reduced (valid range is 1 .. 255). Change setting to 4 for High-Speed USB.
 #ifndef HID_ENDPOINT
-#define DAP_PACKET_COUNT        4U             ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
+#define DAP_PACKET_COUNT        1U             ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
 #else
 #define DAP_PACKET_COUNT        64U             ///< Buffers: 64 = Full-Speed, 4 = High-Speed.
 #endif

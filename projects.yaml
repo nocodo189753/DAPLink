@@ -80,7 +80,7 @@ module:
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/m48ssidae.yaml
         - records/usb/usb-bulk.yaml
-        - records/usb/usb-hid.yaml
+        # - records/usb/usb-hid.yaml
     hic_max32620: &module_hic_max32620
         - records/rtos/rtos-cm4.yaml
         - records/hic_hal/max32620.yaml
